@@ -11,6 +11,7 @@ mod uld {
 }
 
 pub use uld::VL53L7CX_Configuration as Configuration;
+pub use uld::VL53L7CX_ResultsData as ResultsData;
 pub use uld::VL53L7CX_DEFAULT_I2C_ADDRESS;
 
 pub mod platform;
@@ -232,6 +233,26 @@ impl uld::VL53L7CX_Configuration {
             wrap_result(
                 uld::vl53l7cx_set_integration_time_ms(self.as_ptr(), time_ms),
                 (),
+            )
+        }
+    }
+
+    pub fn ranging_data(&mut self) -> Result<ResultsData, Error> {
+        unsafe {
+            let mut data = core::mem::MaybeUninit::<ResultsData>::uninit();
+            wrap_result(
+                uld::vl53l7cx_get_ranging_data(self.as_ptr(), data.as_mut_ptr()),
+                data.assume_init(),
+            )
+        }
+    }
+
+    pub fn check_data_ready(&mut self) -> Result<bool, Error> {
+        unsafe {
+            let mut ready = 0;
+            wrap_result(
+                uld::vl53l7cx_check_data_ready(self.as_ptr(), addr_of_mut!(ready)),
+                ready == 1,
             )
         }
     }
