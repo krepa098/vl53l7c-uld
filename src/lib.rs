@@ -15,7 +15,56 @@ pub use uld::VL53L7CX_DEFAULT_I2C_ADDRESS;
 
 pub mod platform;
 
-// the default (shifted) i2c address
+#[derive(Debug, Clone, Copy)]
+#[repr(u8)]
+pub enum PowerMode {
+    Sleep = uld::VL53L7CX_POWER_MODE_SLEEP,
+    Wakeup = uld::VL53L7CX_POWER_MODE_WAKEUP,
+}
+
+impl PowerMode {
+    fn from_u8(v: u8) -> Self {
+        match v {
+            uld::VL53L7CX_POWER_MODE_SLEEP => Self::Sleep,
+            uld::VL53L7CX_POWER_MODE_WAKEUP => Self::Wakeup,
+            _ => unimplemented!(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy)]
+#[repr(u8)]
+pub enum RangingMode {
+    Continuous = uld::VL53L7CX_RANGING_MODE_CONTINUOUS,
+    Autonomous = uld::VL53L7CX_RANGING_MODE_AUTONOMOUS,
+}
+
+impl RangingMode {
+    fn from_u8(v: u8) -> Self {
+        match v {
+            uld::VL53L7CX_RANGING_MODE_CONTINUOUS => Self::Continuous,
+            uld::VL53L7CX_RANGING_MODE_AUTONOMOUS => Self::Autonomous,
+            _ => unimplemented!(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy)]
+#[repr(u8)]
+pub enum Resolution {
+    Res8x8 = uld::VL53L7CX_RESOLUTION_8X8,
+    Res4x4 = uld::VL53L7CX_RESOLUTION_4X4,
+}
+
+impl Resolution {
+    fn from_u8(v: u8) -> Self {
+        match v {
+            uld::VL53L7CX_RESOLUTION_8X8 => Self::Res8x8,
+            uld::VL53L7CX_RESOLUTION_4X4 => Self::Res4x4,
+            _ => unimplemented!(),
+        }
+    }
+}
 
 #[derive(Debug, Clone, Copy)]
 pub enum Error {
@@ -96,7 +145,7 @@ impl uld::VL53L7CX_Configuration {
         }
     }
 
-    pub fn get_ranging_frequency_hz(&mut self) -> Result<u8, Error> {
+    pub fn ranging_frequency_hz(&mut self) -> Result<u8, Error> {
         unsafe {
             let mut hz = 0;
             wrap_result(
@@ -116,12 +165,73 @@ impl uld::VL53L7CX_Configuration {
         }
     }
 
-    pub fn get_resolution(&mut self) -> Result<u8, Error> {
+    pub fn resolution(&mut self) -> Result<Resolution, Error> {
         unsafe {
             let mut resolution = 0;
             wrap_result(
                 uld::vl53l7cx_get_resolution(self.as_ptr(), addr_of_mut!(resolution)),
-                resolution,
+                Resolution::from_u8(resolution),
+            )
+        }
+    }
+
+    pub fn set_resolution(&mut self, resolution: Resolution) -> Result<(), Error> {
+        unsafe {
+            wrap_result(
+                uld::vl53l7cx_set_resolution(self.as_ptr(), resolution as u8),
+                (),
+            )
+        }
+    }
+
+    pub fn power_mode(&mut self) -> Result<PowerMode, Error> {
+        unsafe {
+            let mut mode = 0;
+            wrap_result(
+                uld::vl53l7cx_get_power_mode(self.as_ptr(), addr_of_mut!(mode)),
+                PowerMode::from_u8(mode),
+            )
+        }
+    }
+
+    pub fn set_power_mode(&mut self, mode: PowerMode) -> Result<(), Error> {
+        unsafe { wrap_result(uld::vl53l7cx_set_power_mode(self.as_ptr(), mode as u8), ()) }
+    }
+
+    pub fn ranging_mode(&mut self) -> Result<RangingMode, Error> {
+        unsafe {
+            let mut mode = 0;
+            wrap_result(
+                uld::vl53l7cx_get_ranging_mode(self.as_ptr(), addr_of_mut!(mode)),
+                RangingMode::from_u8(mode),
+            )
+        }
+    }
+
+    pub fn set_ranging_mode(&mut self, mode: RangingMode) -> Result<(), Error> {
+        unsafe {
+            wrap_result(
+                uld::vl53l7cx_set_ranging_mode(self.as_ptr(), mode as u8),
+                (),
+            )
+        }
+    }
+
+    pub fn integration_time_ms(&mut self) -> Result<u32, Error> {
+        unsafe {
+            let mut time_ms = 0;
+            wrap_result(
+                uld::vl53l7cx_get_integration_time_ms(self.as_ptr(), addr_of_mut!(time_ms)),
+                time_ms,
+            )
+        }
+    }
+
+    pub fn set_integration_time_ms(&mut self, time_ms: u32) -> Result<(), Error> {
+        unsafe {
+            wrap_result(
+                uld::vl53l7cx_set_integration_time_ms(self.as_ptr(), time_ms),
+                (),
             )
         }
     }
