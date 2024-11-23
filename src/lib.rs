@@ -63,18 +63,10 @@ impl uld::VL53L7CX_Configuration {
         // note: this is a *fat* pointer (size of two pointers)
         let dy: &mut dyn PlatformExt = p;
 
-        println!("fat ptr size {:?} bytes", size_of::<&mut dyn PlatformExt>());
-
-        // let al_rust = align_of_val(dy);
-
-        // let inner_addr = addr_of_mut!(config.platform.inner);
-        // println!("Rust align {}", al_rust);
-        // println!(
-        //     "Rust ptr {:?}, inner {:?}, {}",
-        //     dy as *mut _ as *mut core::ffi::c_void,
-        //     inner_addr,
-        //     inner_addr as usize % al_rust
-        // );
+        assert_eq!(
+            size_of::<&mut dyn PlatformExt>(),
+            size_of_val(&config.platform.inner)
+        );
 
         let pp = addr_of_mut!(config.platform.inner);
 
@@ -86,6 +78,7 @@ impl uld::VL53L7CX_Configuration {
         config
     }
 
+    #[inline]
     pub fn as_ptr(&mut self) -> *mut Self {
         self as *mut _
     }
@@ -144,13 +137,11 @@ impl uld::VL53L7CX_Configuration {
 
 #[cfg(test)]
 mod test {
-    use platform::PlatformExt;
 
     use super::*;
 
-    #[repr(C)]
-    struct DummyPlatform {
-        foo: u32,
+    #[derive(Default)]
+    pub struct DummyPlatform {
         _pin: core::marker::PhantomPinned,
     }
 
@@ -170,17 +161,13 @@ mod test {
 
     #[test]
     fn init() {
-        let mut platform = DummyPlatform {
-            foo: 0,
-            _pin: core::marker::PhantomPinned,
-        };
+        let mut platform = DummyPlatform::default();
 
         let mut dev = uld::VL53L7CX_Configuration::new(&mut platform);
 
         println!("Dev size {}kb", size_of_val(&dev) / 1024);
 
-        unsafe {
-            uld::vl53l7cx_init(dev.as_ptr());
-        }
+        // this timeouts since we don't actually interact with the device
+        assert!(dev.init().is_err())
     }
 }
