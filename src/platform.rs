@@ -2,7 +2,7 @@
 
 use crate::uld::VL53L7CX_Platform;
 
-use crate::VL53L7CX_STATUS_OK;
+use crate::uld::VL53L7CX_STATUS_OK;
 use core::ptr::addr_of_mut;
 
 pub trait PlatformExt {

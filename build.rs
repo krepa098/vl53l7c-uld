@@ -32,6 +32,8 @@ fn main() {
         .header("wrapper.h")
         .clang_arg(format!("-I{uld_root}/VL53L7CX_ULD_API/inc"))
         .clang_arg(format!("-I{uld_root}/Platform"))
+        .fit_macro_constants(true)
+        .clang_macro_fallback()
         .parse_callbacks(Box::new(bindgen::CargoCallbacks::new()))
         .generate()
         .expect("Unable to generate bindings");

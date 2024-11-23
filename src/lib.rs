@@ -11,19 +11,11 @@ mod uld {
 }
 
 pub use uld::VL53L7CX_Configuration as Configuration;
+pub use uld::VL53L7CX_DEFAULT_I2C_ADDRESS;
 
 pub mod platform;
 
-pub const VL53L7CX_STATUS_OK: u8 = 0;
-pub const VL53L7CX_STATUS_TIMEOUT_ERROR: u8 = 1;
-pub const VL53L7CX_STATUS_CORRUPTED_FRAME: u8 = 2;
-pub const VL53L7CX_STATUS_XTALK_FAILED: u8 = 4;
-pub const VL53L7CX_MCU_ERROR: u8 = 66;
-pub const VL53L7CX_STATUS_INVALID_PARAM: u8 = 127;
-pub const VL53L7CX_STATUS_ERROR: u8 = 255;
-
 // the default (shifted) i2c address
-pub const VL53L7CX_DEFAULT_I2C_ADDRESS: u8 = 0x52;
 
 #[derive(Debug, Clone, Copy)]
 pub enum Error {
@@ -38,12 +30,12 @@ pub enum Error {
 impl Error {
     fn from_u8(e: u8) -> Self {
         match e {
-            VL53L7CX_STATUS_TIMEOUT_ERROR => Self::StatusTimeout,
-            VL53L7CX_STATUS_CORRUPTED_FRAME => Self::StatusCorruptedFrame,
-            VL53L7CX_STATUS_XTALK_FAILED => Self::StatusXtalkFailed,
-            VL53L7CX_MCU_ERROR => Self::McuError,
-            VL53L7CX_STATUS_INVALID_PARAM => Self::StatusInvalidParam,
-            VL53L7CX_STATUS_ERROR => Self::StatusError,
+            uld::VL53L7CX_STATUS_TIMEOUT_ERROR => Self::StatusTimeout,
+            uld::VL53L7CX_STATUS_CORRUPTED_FRAME => Self::StatusCorruptedFrame,
+            uld::VL53L7CX_STATUS_XTALK_FAILED => Self::StatusXtalkFailed,
+            uld::VL53L7CX_MCU_ERROR => Self::McuError,
+            uld::VL53L7CX_STATUS_INVALID_PARAM => Self::StatusInvalidParam,
+            uld::VL53L7CX_STATUS_ERROR => Self::StatusError,
             _ => unimplemented!(),
         }
     }
@@ -51,7 +43,7 @@ impl Error {
 
 fn wrap_result<T>(ret: u8, v: T) -> Result<T, Error> {
     match ret {
-        VL53L7CX_STATUS_OK => Ok(v),
+        uld::VL53L7CX_STATUS_OK => Ok(v),
         _ => Err(Error::from_u8(ret)),
     }
 }
