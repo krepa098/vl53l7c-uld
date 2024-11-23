@@ -108,7 +108,7 @@ impl uld::VL53L7CX_Configuration {
         unsafe {
             let mut hz = 0;
             wrap_result(
-                uld::vl53l7cx_get_ranging_frequency_hz(self.as_ptr(), &mut hz as *mut _),
+                uld::vl53l7cx_get_ranging_frequency_hz(self.as_ptr(), addr_of_mut!(hz)),
                 hz,
             )
         }
@@ -118,7 +118,7 @@ impl uld::VL53L7CX_Configuration {
         unsafe {
             let mut is_alive = 0;
             wrap_result(
-                uld::vl53l7cx_is_alive(self.as_ptr(), &mut is_alive as *mut _),
+                uld::vl53l7cx_is_alive(self.as_ptr(), addr_of_mut!(is_alive)),
                 is_alive,
             )
         }
@@ -128,7 +128,7 @@ impl uld::VL53L7CX_Configuration {
         unsafe {
             let mut resolution = 0;
             wrap_result(
-                uld::vl53l7cx_get_resolution(self.as_ptr(), &mut resolution as *mut _),
+                uld::vl53l7cx_get_resolution(self.as_ptr(), addr_of_mut!(resolution)),
                 resolution,
             )
         }
