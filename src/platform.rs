@@ -6,8 +6,8 @@ use core::ops::Fn;
 use core::ptr::addr_of_mut;
 
 pub trait PlatformExt {
-    fn rd_bytes(&mut self, index: u16, buf: &mut [u8]);
-    fn wr_bytes(&mut self, index: u16, vs: &[u8]);
+    fn rd_bytes(&mut self, register: u16, buf: &mut [u8]);
+    fn wr_bytes(&mut self, register: u16, buf: &[u8]);
     fn delay_ms(&mut self, ms: u32);
 }
 
