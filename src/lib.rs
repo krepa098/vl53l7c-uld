@@ -1,4 +1,8 @@
+#![cfg_attr(not(feature = "std"), no_std)]
+
+use core::assert_eq;
 use core::ptr::addr_of_mut;
+use core::result::{Result, Result::Err, Result::Ok};
 use platform::PlatformExt;
 
 mod uld {
@@ -115,7 +119,6 @@ impl uld::VL53L7CX_Configuration {
         unsafe {
             *(pp as *mut &mut dyn PlatformExt) = dy;
             config.platform.address = VL53L7CX_DEFAULT_I2C_ADDRESS as u16;
-            println!("config.platform {:?}", config.platform);
         }
         config
     }

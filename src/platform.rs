@@ -1,8 +1,8 @@
 #![allow(non_snake_case)]
 
 use crate::uld::VL53L7CX_Platform;
-
 use crate::uld::VL53L7CX_STATUS_OK;
+use core::ops::Fn;
 use core::ptr::addr_of_mut;
 
 pub trait PlatformExt {

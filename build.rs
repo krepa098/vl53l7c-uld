@@ -32,6 +32,8 @@ fn main() {
         .header("wrapper.h")
         .clang_arg(format!("-I{uld_root}/VL53L7CX_ULD_API/inc"))
         .clang_arg(format!("-I{uld_root}/Platform"))
+        .clang_arg("-I/usr/arm-none-eabi/include") // TODO: check target
+        .use_core()
         .fit_macro_constants(true)
         .clang_macro_fallback()
         .parse_callbacks(Box::new(bindgen::CargoCallbacks::new()))
