@@ -1,10 +1,5 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
-use core::assert_eq;
-use core::ptr::addr_of_mut;
-use core::result::{Result, Result::Err, Result::Ok};
-use platform::PlatformExt;
-
 mod uld {
     #![allow(non_upper_case_globals)]
     #![allow(non_camel_case_types)]
@@ -14,11 +9,19 @@ mod uld {
     include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 }
 
-pub use uld::VL53L7CX_Configuration as Configuration;
-pub use uld::VL53L7CX_ResultsData as ResultsData;
-pub use uld::VL53L7CX_DEFAULT_I2C_ADDRESS;
-
 pub mod platform;
+
+use core::{
+    assert_eq,
+    ptr::addr_of_mut,
+    result::Result::{self, Err, Ok},
+};
+use platform::PlatformExt;
+
+pub use uld::{
+    VL53L7CX_Configuration as Configuration, VL53L7CX_ResultsData as ResultsData,
+    VL53L7CX_DEFAULT_I2C_ADDRESS,
+};
 
 #[derive(Debug, Clone, Copy)]
 #[repr(u8)]
@@ -272,16 +275,22 @@ mod test {
     }
 
     impl PlatformExt for DummyPlatform {
-        fn rd_bytes(&mut self, _index: u16, _buf: &mut [u8]) {
+        fn rd_bytes(&mut self, _index: u16, _buf: &mut [u8]) -> Result<(), Error> {
             println!("rd_bytes");
+
+            Ok(())
         }
 
-        fn wr_bytes(&mut self, _index: u16, _vs: &[u8]) {
+        fn wr_bytes(&mut self, _index: u16, _vs: &[u8]) -> Result<(), Error> {
             println!("wr_bytes");
+
+            Ok(())
         }
 
-        fn delay_ms(&mut self, _ms: u32) {
+        fn delay_ms(&mut self, _ms: u32) -> Result<(), Error> {
             println!("delay_ms");
+
+            Ok(())
         }
     }
 
