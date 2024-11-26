@@ -20,7 +20,7 @@ use platform::PlatformExt;
 
 pub use uld::{
     VL53L7CX_Configuration as Configuration, VL53L7CX_ResultsData as ResultsData,
-    VL53L7CX_DEFAULT_I2C_ADDRESS,
+    VL53L7CX_API_REVISION, VL53L7CX_DEFAULT_I2C_ADDRESS,
 };
 
 #[derive(Debug, Clone, Copy)]
