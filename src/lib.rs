@@ -262,6 +262,49 @@ impl uld::VL53L7CX_Configuration {
             )
         }
     }
+
+    pub fn calibrate_xtalk(
+        &mut self,
+        reflectance_percent: u16,
+        nb_samples: u8,
+        distance_mm: u16,
+    ) -> Result<(), Error> {
+        unsafe {
+            wrap_result(
+                uld::vl53l7cx_calibrate_xtalk(
+                    self.as_ptr(),
+                    reflectance_percent,
+                    nb_samples,
+                    distance_mm,
+                ),
+                (),
+            )
+        }
+    }
+
+    pub fn caldata_xtalk(
+        &mut self,
+    ) -> Result<[u8; uld::VL53L7CX_XTALK_BUFFER_SIZE as usize], Error> {
+        let mut buffer = [0_u8; uld::VL53L7CX_XTALK_BUFFER_SIZE as usize];
+        unsafe {
+            wrap_result(
+                uld::vl53l7cx_get_caldata_xtalk(self.as_ptr(), buffer.as_mut_ptr()),
+                buffer,
+            )
+        }
+    }
+
+    pub fn set_caldata_xtalk(
+        &mut self,
+        cal_data_xtalk: &[u8; uld::VL53L7CX_XTALK_BUFFER_SIZE as usize],
+    ) -> Result<(), Error> {
+        unsafe {
+            wrap_result(
+                uld::vl53l7cx_set_caldata_xtalk(self.as_ptr(), cal_data_xtalk.as_ptr() as *mut _),
+                (),
+            )
+        }
+    }
 }
 
 #[cfg(test)]
