@@ -7,6 +7,9 @@ mod uld {
     #![allow(unused)]
 
     include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
+
+    unsafe impl Send for VL53L7CX_Platform {}
+    unsafe impl Send for VL53L7CX_Configuration {}
 }
 
 pub mod platform;
