@@ -28,17 +28,41 @@ fn main() {
     println!("cargo:rustc-link-search={}", out_path.to_str().unwrap());
     println!("cargo:rustc-link-lib=VL53L7CX_ULD");
 
-    let bindings = bindgen::Builder::default()
+    let mut bindings = bindgen::Builder::default()
         .header("wrapper.h")
         .clang_arg(format!("-I{uld_root}/VL53L7CX_ULD_API/inc"))
         .clang_arg(format!("-I{uld_root}/Platform"))
-        .clang_arg("-I/usr/arm-none-eabi/include") // TODO: check target
         .use_core()
         .fit_macro_constants(true)
         .clang_macro_fallback()
-        .parse_callbacks(Box::new(bindgen::CargoCallbacks::new()))
-        .generate()
-        .expect("Unable to generate bindings");
+        .parse_callbacks(Box::new(bindgen::CargoCallbacks::new()));
+
+    // find certain header files ('string.h', 'stddef.h') not picked up automatically when cross compiling
+    let target = std::env::var("TARGET").unwrap();
+    if target == "thumbv7em-none-eabihf" {
+        // find the gcc-arm-none-eabi version
+        let mut gcc_versions =
+            std::fs::read_dir("/usr/lib/gcc/arm-none-eabi").expect("Cannot find gcc version");
+        let gcc_version = gcc_versions
+            .next()
+            .unwrap()
+            .unwrap()
+            .file_name()
+            .to_str()
+            .unwrap()
+            .to_owned();
+        println!("gcc version: '{}'", gcc_version);
+
+        // pass newlib and gcc arm-none-eabi include
+        bindings = bindings
+            .clang_arg("-I/usr/include/newlib")
+            .clang_arg(format!(
+                "-I/usr/lib/gcc/arm-none-eabi/{}/include",
+                gcc_version
+            ));
+    }
+
+    let bindings = bindings.generate().expect("Unable to generate bindings");
 
     // write the bindings to the $OUT_DIR/bindings.rs file.
     bindings
