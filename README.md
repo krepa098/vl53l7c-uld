@@ -4,7 +4,7 @@ This is a wrapper around ST's `VL53L7C` ULD driver (version 2.0.0) to be used wi
 ## Usage
 The ULD driver is compiled as a static library and then linked to your project. The driver needs to know how to interact with the hardware (i2c read/write and delay). This functionality is defined by the `PlatformExt` trait that you will have to implement for your hardware.
 
-Take the following snipped as a starting point:
+Take the following snippet as a starting point:
 
 ```
 struct Inner {
