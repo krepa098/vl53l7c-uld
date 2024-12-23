@@ -85,6 +85,7 @@ pub enum Error {
     McuError,
     StatusInvalidParam,
     StatusError,
+    Unknown,
 }
 
 impl Error {
@@ -96,7 +97,7 @@ impl Error {
             uld::VL53L7CX_MCU_ERROR => Self::McuError,
             uld::VL53L7CX_STATUS_INVALID_PARAM => Self::StatusInvalidParam,
             uld::VL53L7CX_STATUS_ERROR => Self::StatusError,
-            _ => unimplemented!(),
+            _ => Self::Unknown,
         }
     }
 }
@@ -304,6 +305,25 @@ impl uld::VL53L7CX_Configuration {
         unsafe {
             wrap_result(
                 uld::vl53l7cx_set_caldata_xtalk(self.as_ptr(), cal_data_xtalk.as_ptr() as *mut _),
+                (),
+            )
+        }
+    }
+
+    pub fn sharpener_percent(&mut self) -> Result<u8, Error> {
+        unsafe {
+            let mut percent = 0;
+            wrap_result(
+                uld::vl53l7cx_get_sharpener_percent(self.as_ptr(), addr_of_mut!(percent)),
+                percent,
+            )
+        }
+    }
+
+    pub fn set_sharpener_percent(&mut self, percent: u8) -> Result<(), Error> {
+        unsafe {
+            wrap_result(
+                uld::vl53l7cx_set_sharpener_percent(self.as_ptr(), percent),
                 (),
             )
         }
