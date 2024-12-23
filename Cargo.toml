@@ -10,5 +10,5 @@ std = []
 [dependencies]
 
 [build-dependencies]
-bindgen = "0.70.1"
-cc = "1.0"
+bindgen = "0.71.1"
+cc = "1.2.5"
