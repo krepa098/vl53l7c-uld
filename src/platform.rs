@@ -4,7 +4,7 @@ use crate::{
     uld::{VL53L7CX_Platform, VL53L7CX_STATUS_OK},
     Error,
 };
-use core::{ops::Fn, ptr::addr_of_mut};
+use core::ops::Fn;
 
 pub trait PlatformExt {
     fn rd_bytes(&mut self, register: u16, buf: &mut [u8]) -> Result<(), Error>;
@@ -113,7 +113,7 @@ where
 {
     let inner: &mut dyn PlatformExt = unsafe {
         let mut platform = p_platform.read();
-        let pp = addr_of_mut!(platform.inner);
+        let pp = &raw mut platform.inner;
         core::ptr::NonNull::new_unchecked(pp)
             .cast::<&mut dyn PlatformExt>()
             .read()

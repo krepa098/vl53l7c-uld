@@ -16,7 +16,6 @@ pub mod platform;
 
 use core::{
     assert_eq,
-    ptr::addr_of_mut,
     result::Result::{self, Err, Ok},
 };
 use platform::PlatformExt;
@@ -121,7 +120,7 @@ impl uld::VL53L7CX_Configuration {
             size_of_val(&config.platform.inner)
         );
 
-        let pp = addr_of_mut!(config.platform.inner);
+        let pp = &raw mut config.platform.inner;
 
         unsafe {
             *(pp as *mut &mut dyn PlatformExt) = dy;
@@ -160,7 +159,7 @@ impl uld::VL53L7CX_Configuration {
         unsafe {
             let mut hz = 0;
             wrap_result(
-                uld::vl53l7cx_get_ranging_frequency_hz(self.as_ptr(), addr_of_mut!(hz)),
+                uld::vl53l7cx_get_ranging_frequency_hz(self.as_ptr(), &raw mut hz),
                 hz,
             )
         }
@@ -170,7 +169,7 @@ impl uld::VL53L7CX_Configuration {
         unsafe {
             let mut is_alive = 0;
             wrap_result(
-                uld::vl53l7cx_is_alive(self.as_ptr(), addr_of_mut!(is_alive)),
+                uld::vl53l7cx_is_alive(self.as_ptr(), &raw mut is_alive),
                 is_alive,
             )
         }
@@ -180,7 +179,7 @@ impl uld::VL53L7CX_Configuration {
         unsafe {
             let mut resolution = 0;
             wrap_result(
-                uld::vl53l7cx_get_resolution(self.as_ptr(), addr_of_mut!(resolution)),
+                uld::vl53l7cx_get_resolution(self.as_ptr(), &raw mut resolution),
                 Resolution::from_u8(resolution),
             )
         }
@@ -199,7 +198,7 @@ impl uld::VL53L7CX_Configuration {
         unsafe {
             let mut mode = 0;
             wrap_result(
-                uld::vl53l7cx_get_power_mode(self.as_ptr(), addr_of_mut!(mode)),
+                uld::vl53l7cx_get_power_mode(self.as_ptr(), &raw mut mode),
                 PowerMode::from_u8(mode),
             )
         }
@@ -213,7 +212,7 @@ impl uld::VL53L7CX_Configuration {
         unsafe {
             let mut mode = 0;
             wrap_result(
-                uld::vl53l7cx_get_ranging_mode(self.as_ptr(), addr_of_mut!(mode)),
+                uld::vl53l7cx_get_ranging_mode(self.as_ptr(), &raw mut mode),
                 RangingMode::from_u8(mode),
             )
         }
@@ -232,7 +231,7 @@ impl uld::VL53L7CX_Configuration {
         unsafe {
             let mut time_ms = 0;
             wrap_result(
-                uld::vl53l7cx_get_integration_time_ms(self.as_ptr(), addr_of_mut!(time_ms)),
+                uld::vl53l7cx_get_integration_time_ms(self.as_ptr(), &raw mut time_ms),
                 time_ms,
             )
         }
@@ -261,7 +260,7 @@ impl uld::VL53L7CX_Configuration {
         unsafe {
             let mut ready = 0;
             wrap_result(
-                uld::vl53l7cx_check_data_ready(self.as_ptr(), addr_of_mut!(ready)),
+                uld::vl53l7cx_check_data_ready(self.as_ptr(), &raw mut ready),
                 ready == 1,
             )
         }
@@ -314,7 +313,7 @@ impl uld::VL53L7CX_Configuration {
         unsafe {
             let mut percent = 0;
             wrap_result(
-                uld::vl53l7cx_get_sharpener_percent(self.as_ptr(), addr_of_mut!(percent)),
+                uld::vl53l7cx_get_sharpener_percent(self.as_ptr(), &raw mut percent),
                 percent,
             )
         }
