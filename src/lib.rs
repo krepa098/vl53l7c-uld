@@ -165,12 +165,12 @@ impl uld::VL53L7CX_Configuration {
         }
     }
 
-    pub fn is_alive(&mut self) -> Result<u8, Error> {
+    pub fn is_alive(&mut self) -> Result<bool, Error> {
         unsafe {
             let mut is_alive = 0;
             wrap_result(
                 uld::vl53l7cx_is_alive(self.as_ptr(), &raw mut is_alive),
-                is_alive,
+                is_alive == 1,
             )
         }
     }
