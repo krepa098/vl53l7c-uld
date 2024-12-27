@@ -327,6 +327,25 @@ impl uld::VL53L7CX_Configuration {
             )
         }
     }
+
+    pub fn set_vhv_repeat_count(&mut self, repeat_count: u32) -> Result<(), Error> {
+        unsafe {
+            wrap_result(
+                uld::vl53l7cx_set_VHV_repeat_count(self.as_ptr(), repeat_count),
+                (),
+            )
+        }
+    }
+
+    pub fn vhv_repeat_count(&mut self) -> Result<u32, Error> {
+        unsafe {
+            let mut repeat_count = 0;
+            wrap_result(
+                uld::vl53l7cx_get_VHV_repeat_count(self.as_ptr(), &raw mut repeat_count),
+                repeat_count,
+            )
+        }
+    }
 }
 
 #[cfg(test)]
