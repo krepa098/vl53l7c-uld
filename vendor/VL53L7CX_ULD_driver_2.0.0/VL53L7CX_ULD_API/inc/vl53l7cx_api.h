@@ -638,7 +638,7 @@ uint8_t vl53l7cx_set_ranging_mode(
  * To be used only if AVDD = 3.3V
  * @param (VL53L7CX_Configuration) *p_dev : VL53L7CX configuration structure.
  */
-uint8_t vl53ll7cx_enable_internal_cp(
+uint8_t vl53l7cx_enable_internal_cp(
 		VL53L7CX_Configuration          *p_dev);
 
 
@@ -648,7 +648,7 @@ uint8_t vl53ll7cx_enable_internal_cp(
  * To be used only if AVDD = 3.3V
  * @param (VL53L7CX_Configuration) *p_dev : VL53L7CX configuration structure.
  */
-uint8_t vl53ll7cx_disable_internal_cp(
+uint8_t vl53l7cx_disable_internal_cp(
  	      VL53L7CX_Configuration          *p_dev);
 
 /**
