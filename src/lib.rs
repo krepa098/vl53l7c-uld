@@ -346,6 +346,14 @@ impl uld::VL53L7CX_Configuration {
             )
         }
     }
+
+    pub fn disable_internal_cp(&mut self) -> Result<(), Error> {
+        unsafe { wrap_result(uld::vl53ll7cx_disable_internal_cp(self.as_ptr()), ()) }
+    }
+
+    pub fn enable_internal_cp(&mut self) -> Result<(), Error> {
+        unsafe { wrap_result(uld::vl53ll7cx_enable_internal_cp(self.as_ptr()), ()) }
+    }
 }
 
 #[cfg(test)]
