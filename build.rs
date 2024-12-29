@@ -25,24 +25,31 @@ fn main() {
 
     // features
     // use this to reduce the RAM size and I2C size
+    #[allow(unused_mut)]
+    let mut defines: Vec<&str> = vec![];
+
     #[cfg(feature = "disable_ambient_per_spad")]
-    cc.define("VL53L7CX_DISABLE_AMBIENT_PER_SPAD", None);
+    defines.push("VL53L7CX_DISABLE_AMBIENT_PER_SPAD");
     #[cfg(feature = "disable_nb_spads_enable")]
-    cc.define("VL53L7CX_DISABLE_NB_SPADS_ENABLED", None);
+    defines.push("VL53L7CX_DISABLE_NB_SPADS_ENABLED");
     #[cfg(feature = "disable_nb_target_detected")]
-    cc.define("VL53L7CX_DISABLE_NB_TARGET_DETECTED", None);
+    defines.push("VL53L7CX_DISABLE_NB_TARGET_DETECTED");
     #[cfg(feature = "disable_signal_per_spad")]
-    cc.define("VL53L7CX_DISABLE_SIGNAL_PER_SPAD", None);
+    defines.push("VL53L7CX_DISABLE_SIGNAL_PER_SPAD");
     #[cfg(feature = "disable_range_sigma_mm")]
-    cc.define("VL53L7CX_DISABLE_RANGE_SIGMA_MM", None);
+    defines.push("VL53L7CX_DISABLE_RANGE_SIGMA_MM");
     #[cfg(feature = "disable_target_status")]
-    cc.define("VL53L7CX_DISABLE_TARGET_STATUS", None);
+    defines.push("VL53L7CX_DISABLE_TARGET_STATUS");
     #[cfg(feature = "disable_motion_indicator")]
-    cc.define("VL53L7CX_DISABLE_MOTION_INDICATOR", None);
+    defines.push("VL53L7CX_DISABLE_MOTION_INDICATOR");
     #[cfg(feature = "disable_distance_mm")]
-    cc.define("VL53L7CX_DISABLE_DISTANCE_MM", None);
+    defines.push("VL53L7CX_DISABLE_DISTANCE_MM");
     #[cfg(feature = "disable_reflectance_percent")]
-    cc.define("VL53L7CX_DISABLE_REFLECTANCE_PERCENT", None);
+    defines.push("VL53L7CX_DISABLE_REFLECTANCE_PERCENT");
+
+    for def in &defines {
+        cc.define(def, None);
+    }
 
     // compile as static lib
     cc.compile("VL53L7CX_ULD");
@@ -59,6 +66,10 @@ fn main() {
         .fit_macro_constants(true)
         .clang_macro_fallback()
         .parse_callbacks(Box::new(bindgen::CargoCallbacks::new()));
+
+    for def in &defines {
+        bindings = bindings.clang_arg(format!("-D{}", def));
+    }
 
     // find certain header files ('string.h', 'stddef.h') not picked up automatically when cross compiling
     let target = std::env::var("TARGET").unwrap();
