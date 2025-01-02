@@ -10,6 +10,7 @@ pub trait PlatformExt {
     fn rd_bytes(&mut self, register: u16, buf: &mut [u8]) -> Result<(), Error>;
     fn wr_bytes(&mut self, register: u16, buf: &[u8]) -> Result<(), Error>;
     fn delay_ms(&mut self, ms: u32) -> Result<(), Error>;
+    fn on_i2c_address_changed(&mut self, new_address: u8);
 }
 
 #[no_mangle]
@@ -105,6 +106,11 @@ extern "C" fn VL53L7CX_WaitMs(p_platform: *mut VL53L7CX_Platform, TimeMs: u32) -
         Ok(_) => VL53L7CX_STATUS_OK,
         Err(e) => e as u8,
     }
+}
+
+#[no_mangle]
+extern "C" fn VL53L7CX_I2CAddressChanged(p_platform: *mut VL53L7CX_Platform, address: u16) {
+    with_inner(p_platform, |p| p.on_i2c_address_changed(address as u8));
 }
 
 fn with_inner<T, F>(p_platform: *mut VL53L7CX_Platform, f: F) -> T

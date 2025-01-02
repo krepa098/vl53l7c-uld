@@ -31,7 +31,6 @@ typedef struct
      * needs to be added */
     /* Example for most standard platform : I2C address of sensor */
     void *inner[2]; // space for the fat pointer
-    uint16_t address;
 
 } VL53L7CX_Platform;
 
@@ -163,5 +162,17 @@ void VL53L7CX_SwapBuffer(
 uint8_t VL53L7CX_WaitMs(
     VL53L7CX_Platform *p_platform,
     uint32_t TimeMs);
+
+/**
+ * @brief Mandatory function, used to signal a change of the I2C address. It must be
+ * filled as it's used into the API.
+ * @param (VL53L7CX_Platform*) p_platform : Pointer of VL53L7CX platform
+ * structure.
+ * @param (uint16_t) address : The new address to be used by subsequent I2C transactions.
+ */
+
+void VL53L7CX_I2CAddressChanged(
+    VL53L7CX_Platform *p_platform,
+    uint16_t address);
 
 #endif // _PLATFORM_H_

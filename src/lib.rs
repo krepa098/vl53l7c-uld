@@ -124,7 +124,6 @@ impl uld::VL53L7CX_Configuration {
 
         unsafe {
             *(pp as *mut &mut dyn PlatformExt) = dy;
-            config.platform.address = VL53L7CX_DEFAULT_I2C_ADDRESS as u16;
         }
         config
     }
@@ -354,6 +353,15 @@ impl uld::VL53L7CX_Configuration {
     pub fn enable_internal_cp(&mut self) -> Result<(), Error> {
         unsafe { wrap_result(uld::vl53l7cx_enable_internal_cp(self.as_ptr()), ()) }
     }
+
+    pub fn set_i2c_address(&mut self, i2c_address: u16) -> Result<(), Error> {
+        unsafe {
+            wrap_result(
+                uld::vl53l7cx_set_i2c_address(self.as_ptr(), i2c_address),
+                (),
+            )
+        }
+    }
 }
 
 #[cfg(test)]
@@ -384,6 +392,8 @@ mod test {
 
             Ok(())
         }
+
+        fn on_i2c_address_changed(&mut self, _new_address: u8) {}
     }
 
     #[test]

@@ -412,7 +412,7 @@ uint8_t vl53l7cx_set_i2c_address(
 
 	status |= VL53L7CX_WrByte(&(p_dev->platform), 0x7fff, 0x00);
 	status |= VL53L7CX_WrByte(&(p_dev->platform), 0x4, (uint8_t)(i2c_address >> 1));
-	p_dev->platform.address = i2c_address;
+	VL53L7CX_I2CAddressChanged(&(p_dev->platform), i2c_address);
 	status |= VL53L7CX_WrByte(&(p_dev->platform), 0x7fff, 0x02);
 
 	return status;

@@ -74,6 +74,10 @@ impl PlatformExt for Platform {
         embassy_futures::block_on(crate::Mono::delay(MicrosDurationU64::millis(ms as u64)));
         Ok(())
     }
+
+    fn on_i2c_address_changed(&mut self, new_address: u8) {
+        // make sure you use new_address for subsequent i2c transactions
+    }
 }
 ```
 
