@@ -46,6 +46,8 @@ fn main() {
     defines.push("VL53L7CX_DISABLE_DISTANCE_MM");
     #[cfg(feature = "disable_reflectance_percent")]
     defines.push("VL53L7CX_DISABLE_REFLECTANCE_PERCENT");
+    #[cfg(feature = "plugin_xtalk")]
+    defines.push("PLUGIN_XTALK");
 
     for def in &defines {
         cc.define(def, None);

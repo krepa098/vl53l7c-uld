@@ -265,6 +265,7 @@ impl uld::VL53L7CX_Configuration {
         }
     }
 
+    #[cfg(feature = "plugin_xtalk")]
     pub fn calibrate_xtalk(
         &mut self,
         reflectance_percent: u16,
@@ -284,6 +285,7 @@ impl uld::VL53L7CX_Configuration {
         }
     }
 
+    #[cfg(feature = "plugin_xtalk")]
     pub fn caldata_xtalk(
         &mut self,
     ) -> Result<[u8; uld::VL53L7CX_XTALK_BUFFER_SIZE as usize], Error> {
@@ -296,6 +298,7 @@ impl uld::VL53L7CX_Configuration {
         }
     }
 
+    #[cfg(feature = "plugin_xtalk")]
     pub fn set_caldata_xtalk(
         &mut self,
         cal_data_xtalk: &[u8; uld::VL53L7CX_XTALK_BUFFER_SIZE as usize],
