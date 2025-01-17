@@ -19,8 +19,6 @@ disable_target_status = []
 disable_motion_indicator = []
 disable_distance_mm = []
 disable_reflectance_percent = []
-
-# optional plugins
 plugin_xtalk = []
 
 [dependencies]
